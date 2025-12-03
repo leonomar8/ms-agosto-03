@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FastAPI Prototype</title>
+<link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+<main class="container">
+<h1>FastAPI Web Prototype</h1>
+<p id="message">{{ message }}</p>
+
+
+<form id="orderForm">
+<label>
+Name
+<input type="text" name="name" required />
+</label>
+<label>
+Address
+<input type="text" name="address" required />
+</label>
+<label>
+Product
+<input type="text" name="product" required />
+</label>
+<button type="submit">Submit</button>
+</form>
+
+
+<div id="result" class="hidden"></div>
+</main>
+
+
+<script>
+const form = document.getElementById('orderForm');
+const result = document.getElementById('result');
+
+
+form.addEventListener('submit', async (e) => {
+e.preventDefault();
+const data = new FormData(form);
+const payload = {
+name: data.get('name'),
+address: data.get('address'),
+product: data.get('product')
+};
+
+
+const res = await fetch('/api/submit', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(payload)
+});
+
+
+const json = await res.json();
+result.classList.remove('hidden');
+result.innerText = JSON.stringify(json, null, 2);
+});
+</script>
+</body>
+</html>
